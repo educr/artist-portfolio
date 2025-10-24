@@ -9,6 +9,7 @@ type WorkItem = {
   title: string;
   year?: number | null;
   artist?: string;
+  displayYear?: string;
 };
 
 export default function Home() {
@@ -24,7 +25,7 @@ export default function Home() {
         file !== "addendum.mdx"
     );
 
-  const works: WorkItem[] = files
+  const rawWorks: WorkItem[] = files
     .map((file) => {
       const fullPath = path.join(contentDir, file);
       const src = fs.readFileSync(fullPath, "utf8");
@@ -58,6 +59,40 @@ export default function Home() {
         artist: data.artist || "Eduardo Andrés Crespo",
       } satisfies WorkItem;
     });
+
+  const paintingsPattern = /^paintings-\d{4}$/;
+  const paintingEntries = rawWorks.filter(
+    (work) => work.slug && paintingsPattern.test(work.slug)
+  );
+  const nonPaintingEntries = rawWorks.filter(
+    (work) => !work.slug || !paintingsPattern.test(work.slug)
+  );
+
+  let combinedPaintings: WorkItem | null = null;
+  if (paintingEntries.length > 0) {
+    const years = paintingEntries
+      .map((entry) => entry.year)
+      .filter((value): value is number => typeof value === "number" && Number.isFinite(value));
+    if (years.length > 0) {
+      const latestYear = Math.max(...years);
+      const earliestYear = Math.min(...years);
+      combinedPaintings = {
+        slug: "paintings",
+        title: "Paintings",
+        year: latestYear,
+        displayYear:
+          latestYear === earliestYear
+            ? `${latestYear}`
+            : `${latestYear}–${earliestYear}`,
+        artist: paintingEntries[0]?.artist ?? "Eduardo Andrés Crespo",
+      };
+    }
+  }
+
+  const works: WorkItem[] = combinedPaintings
+    ? [...nonPaintingEntries, combinedPaintings]
+    : nonPaintingEntries;
+
   // sort by year desc, fallback to title
   works.sort((a, b) => {
     const ya = a.year ?? 0;
@@ -115,7 +150,11 @@ export default function Home() {
                   {item.title}
                 </a>
               )}
-              {item.year ? <span className="text-sm text-gray-500">{item.year}</span> : null}
+              {item.displayYear ? (
+                <span className="text-sm text-gray-500">{item.displayYear}</span>
+              ) : item.year ? (
+                <span className="text-sm text-gray-500">{item.year}</span>
+              ) : null}
             </li>
           ))}
         </ul>
@@ -143,7 +182,11 @@ export default function Home() {
                     </a>
                   )}
                 </div>
-                {item.year ? <span className="text-sm text-gray-500">{item.year}</span> : null}
+                {item.displayYear ? (
+                  <span className="text-sm text-gray-500">{item.displayYear}</span>
+                ) : item.year ? (
+                  <span className="text-sm text-gray-500">{item.year}</span>
+                ) : null}
               </li>
             ))}
           </ul>

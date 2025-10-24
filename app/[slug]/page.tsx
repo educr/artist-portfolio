@@ -2,17 +2,30 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { redirect } from "next/navigation";
+
+const paintingsSlugPattern = /^paintings-\d{4}$/;
+const paintingsFilePattern = /^paintings-\d{4}\.mdx$/;
 
 export async function generateStaticParams() {
   const files = fs.readdirSync(path.join(process.cwd(), "content"));
   return files
-    .filter((file) => file.endsWith(".mdx") && file !== "cv.mdx")
+    .filter(
+      (file) =>
+        file.endsWith(".mdx") &&
+        file !== "cv.mdx" &&
+        !paintingsFilePattern.test(file)
+    )
     .map((file) => ({
       slug: file.replace(".mdx", ""),
     }));
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
+  if (paintingsSlugPattern.test(params.slug)) {
+    redirect("/paintings");
+  }
+
   const filePath = path.join(process.cwd(), "content", `${params.slug}.mdx`);
   const source = fs.readFileSync(filePath, "utf8");
   const { content, data } = matter(source);
