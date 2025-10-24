@@ -35,13 +35,15 @@ const loadPaintings = (): PaintingEntry[] => {
         return null;
       }
 
-      return {
+      const entry: PaintingEntry = {
         year,
         content,
         artist: typeof data.artist === "string" ? data.artist : undefined,
-      } satisfies PaintingEntry;
+      };
+
+      return entry;
     })
-    .filter((entry): entry is PaintingEntry => Boolean(entry));
+    .filter((entry): entry is PaintingEntry => entry !== null);
 
   entries.sort((a, b) => b.year - a.year);
   return entries;
