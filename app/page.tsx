@@ -60,37 +60,39 @@ export default function Home() {
       } satisfies WorkItem;
     });
 
-  const paintingsPattern = /^paintings-\d{4}$/;
-  const paintingEntries = rawWorks.filter(
-    (work) => work.slug && paintingsPattern.test(work.slug)
+  const yehiPattern = /^yehi-\d{4}$/;
+  const legacyPaintingsPattern = /^paintings-\d{4}$/;
+  const yehiEntries = rawWorks.filter(
+    (work) => work.slug && (yehiPattern.test(work.slug) || legacyPaintingsPattern.test(work.slug))
   );
   const nonPaintingEntries = rawWorks.filter(
-    (work) => !work.slug || !paintingsPattern.test(work.slug)
+    (work) =>
+      !work.slug || (!yehiPattern.test(work.slug) && !legacyPaintingsPattern.test(work.slug))
   );
 
-  let combinedPaintings: WorkItem | null = null;
-  if (paintingEntries.length > 0) {
-    const years = paintingEntries
+  let combinedYehi: WorkItem | null = null;
+  if (yehiEntries.length > 0) {
+    const years = yehiEntries
       .map((entry) => entry.year)
       .filter((value): value is number => typeof value === "number" && Number.isFinite(value));
     if (years.length > 0) {
       const latestYear = Math.max(...years);
       const earliestYear = Math.min(...years);
-      combinedPaintings = {
-        slug: "paintings",
-        title: "Paintings",
+      combinedYehi = {
+        slug: "yehi",
+        title: "Yehi",
         year: latestYear,
         displayYear:
           latestYear === earliestYear
             ? `${latestYear}`
             : `${latestYear}–${earliestYear}`,
-        artist: paintingEntries[0]?.artist ?? "Eduardo Andrés Crespo",
+        artist: yehiEntries[0]?.artist ?? "Eduardo Andrés Crespo",
       };
     }
   }
 
-  const works: WorkItem[] = combinedPaintings
-    ? [...nonPaintingEntries, combinedPaintings]
+  const works: WorkItem[] = combinedYehi
+    ? [...nonPaintingEntries, combinedYehi]
     : nonPaintingEntries;
 
   // sort by year desc, fallback to title

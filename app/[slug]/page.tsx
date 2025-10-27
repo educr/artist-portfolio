@@ -4,8 +4,10 @@ import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { redirect } from "next/navigation";
 
-const paintingsSlugPattern = /^paintings-\d{4}$/;
-const paintingsFilePattern = /^paintings-\d{4}\.mdx$/;
+const yehiSlugPattern = /^yehi-\d{4}$/;
+const yehiFilePattern = /^yehi-\d{4}\.mdx$/;
+const legacyPaintingsSlugPattern = /^paintings-\d{4}$/;
+const legacyPaintingsFilePattern = /^paintings-\d{4}\.mdx$/;
 
 export async function generateStaticParams() {
   const files = fs.readdirSync(path.join(process.cwd(), "content"));
@@ -14,7 +16,8 @@ export async function generateStaticParams() {
       (file) =>
         file.endsWith(".mdx") &&
         file !== "cv.mdx" &&
-        !paintingsFilePattern.test(file)
+        !yehiFilePattern.test(file) &&
+        !legacyPaintingsFilePattern.test(file)
     )
     .map((file) => ({
       slug: file.replace(".mdx", ""),
@@ -22,8 +25,12 @@ export async function generateStaticParams() {
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
-  if (paintingsSlugPattern.test(params.slug)) {
-    redirect("/paintings");
+  if (yehiSlugPattern.test(params.slug)) {
+    redirect("/yehi");
+  }
+
+  if (legacyPaintingsSlugPattern.test(params.slug)) {
+    redirect("/yehi");
   }
 
   const filePath = path.join(process.cwd(), "content", `${params.slug}.mdx`);
