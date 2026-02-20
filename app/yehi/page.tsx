@@ -6,7 +6,7 @@ import YearTabs from "./YearTabs";
 
 type YehiEntry = {
   year: number;
-  content: string;
+  filePath: string;
   artist?: string;
 };
 
@@ -22,7 +22,7 @@ const loadEntries = (): YehiEntry[] => {
     .map((file) => {
       const filePath = path.join(contentDir, file);
       const raw = fs.readFileSync(filePath, "utf8");
-      const { content, data } = matter(raw);
+      const { data } = matter(raw);
       const [, yearMatch] = yehiPattern.exec(file) ?? [];
       const frontmatterYear = typeof data.year === "number" ? data.year : Number(data.year);
       const year = Number.isFinite(frontmatterYear)
@@ -37,7 +37,7 @@ const loadEntries = (): YehiEntry[] => {
 
       const entry: YehiEntry = {
         year,
-        content,
+        filePath,
         artist: typeof data.artist === "string" ? data.artist : undefined,
       };
 
@@ -49,7 +49,13 @@ const loadEntries = (): YehiEntry[] => {
   return entries;
 };
 
-export default function YehiPage() {
+type Props = {
+  searchParams?: Promise<{
+    year?: string;
+  }>;
+};
+
+export default async function YehiPage({ searchParams }: Props) {
   const entries = loadEntries();
 
   if (!entries.length) {
@@ -62,7 +68,7 @@ export default function YehiPage() {
   }
 
   const sections = entries.map((entry) => ({
-    id: `year-${entry.year}`,
+    year: entry.year,
     label: entry.year.toString(),
   }));
 
@@ -70,6 +76,13 @@ export default function YehiPage() {
   const latestYear = Math.max(...years);
   const earliestYear = Math.min(...years);
   const artist = entries.find((entry) => entry.artist)?.artist ?? "Eduardo Andrés Crespo";
+  const params = searchParams ? await searchParams : undefined;
+  const requestedYear = Number(params?.year);
+  const selectedEntry = Number.isFinite(requestedYear)
+    ? entries.find((entry) => entry.year === requestedYear) ?? entries[0]
+    : entries[0];
+  const rawSelected = fs.readFileSync(selectedEntry.filePath, "utf8");
+  const { content: selectedContent } = matter(rawSelected);
 
   return (
     <main className="mx-auto max-w-3xl p-8">
@@ -81,23 +94,14 @@ export default function YehiPage() {
         </div>
       </header>
 
-      <YearTabs sections={sections} />
+      <YearTabs sections={sections} activeYear={selectedEntry.year} />
 
-      <div className="space-y-20 py-8">
-        {entries.map((entry) => (
-          <section
-            id={`year-${entry.year}`}
-            key={entry.year}
-            className="scroll-mt-28"
-            aria-labelledby={`heading-${entry.year}`}
-          >
-            <h2 id={`heading-${entry.year}`} className="mb-4 text-2xl font-semibold">
-              {entry.year}
-            </h2>
-            <MDXRemote source={entry.content} />
-          </section>
-        ))}
-      </div>
+      <section className="py-8" aria-labelledby={`heading-${selectedEntry.year}`}>
+        <h2 id={`heading-${selectedEntry.year}`} className="mb-4 text-2xl font-semibold">
+          {selectedEntry.year}
+        </h2>
+        <MDXRemote source={selectedContent} />
+      </section>
     </main>
   );
 }
