@@ -12,7 +12,7 @@
   --warm-placeholder-gradient: linear-gradient(135deg, #ddd5c5, #c4b8a8);
   --warm-nav: #6b4e2e;
   --warm-hover-bg: rgba(242, 232, 217, 0.6);
-  --warm-card-bg: rgba(242, 236, 226, 0.5);
+  --warm-card-bg: rgba(242, 236, 226, 0.231);
   --warm-border: rgba(200, 168, 128, 0.22);
 }
 
@@ -29,6 +29,12 @@
   border-radius: 0.75rem;
 }
 .warm-card:hover {
+  background-color: var(--warm-hover-bg);
+}
+.work-card:hover {
+  background-color: var(--warm-hover-bg) !important;
+}
+.year-tab-btn:not(.active):hover {
   background-color: var(--warm-hover-bg);
 }
 

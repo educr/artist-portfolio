@@ -12,6 +12,7 @@ type WorkItem = {
   year?: number | null;
   artist?: string;
   displayYear?: string;
+  medium?: string;
   thumbnail?: string | null;
 };
 
@@ -43,7 +44,7 @@ const extractThumbnail = (frontmatter: Record<string, unknown>, content: string)
 
 const WorkCard = ({ item }: { item: WorkItem }) => {
   const inner = (
-    <div className="group flex flex-col rounded-xl overflow-hidden transition-transform duration-300 hover:-translate-y-0.5" style={{ background: "var(--warm-card-bg)", border: "1px solid var(--warm-border)" }}>
+    <div className="work-card flex flex-col rounded-xl overflow-hidden transition-colors duration-200" style={{ background: "var(--warm-card-bg)", border: "1px solid var(--warm-border)" }}>
       <div
         className="w-full overflow-hidden"
         style={{ aspectRatio: "3/2", background: "var(--warm-placeholder)" }}
@@ -54,7 +55,7 @@ const WorkCard = ({ item }: { item: WorkItem }) => {
             alt={`${item.title} thumbnail`}
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            className="h-full w-full object-cover"
           />
         ) : (
           <div
@@ -68,7 +69,7 @@ const WorkCard = ({ item }: { item: WorkItem }) => {
           {item.title}
         </p>
         <p className="mt-0.5 text-xs" style={{ color: "var(--warm-text)" }}>
-          {item.displayYear ?? item.year ?? ""}
+          {[item.displayYear ?? item.year, item.medium].filter(Boolean).join(" · ")}
         </p>
       </div>
     </div>
@@ -96,7 +97,7 @@ const WorkCard = ({ item }: { item: WorkItem }) => {
 };
 
 const WorkGrid = ({ works }: { works: WorkItem[] }) => (
-  <div className="grid grid-cols-2 gap-4 sm:gap-5">
+  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5">
     {works.map((item) => (
       <WorkCard key={item.url ?? item.slug ?? item.href} item={item} />
     ))}
@@ -146,6 +147,7 @@ export default function Home() {
       title: data.title || file.replace(".mdx", ""),
       year,
       artist: data.artist || "Eduardo Andrés Crespo",
+      medium: typeof data.medium === "string" ? data.medium : undefined,
       thumbnail: extractThumbnail(data as Record<string, unknown>, src),
     } satisfies WorkItem;
   });
@@ -162,9 +164,10 @@ export default function Home() {
 
   const yehiCards: WorkItem[] = yehiEntries.map((entry) => ({
     url: `/yehi?year=${entry.year}`,
-    title: "Paintings",
+    title: "Yehi",
     year: entry.year,
     artist: entry.artist ?? "Eduardo Andrés Crespo",
+    medium: entry.medium,
     thumbnail: entry.thumbnail,
   }));
 
@@ -209,7 +212,7 @@ export default function Home() {
   ].sort(compareWorks);
 
   return (
-    <main className="mx-auto max-w-2xl px-8 py-12">
+    <main className="mx-auto max-w-5xl px-8 py-12">
       <h1
         className="mb-1 font-light tracking-wide"
         style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)" }}
@@ -241,6 +244,20 @@ export default function Home() {
             <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
           </svg>
           Instagram
+        </a>
+        <a
+          href="https://eduardo-crespo.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 text-sm transition-opacity duration-200 hover:opacity-50"
+          style={{ color: "var(--warm-nav)" }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+            <path d="M2 12h20"/>
+          </svg>
+          Design
         </a>
       </div>
 

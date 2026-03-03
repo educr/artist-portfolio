@@ -39,7 +39,7 @@ export default function YearTabs({ sections, activeYear }: Props) {
                 window.scrollTo({ top: 0, behavior: "smooth" });
                 router.replace(`/yehi?year=${section.year}`, { scroll: false });
               }}
-              className="flex-1 py-1.5 text-xs uppercase tracking-[0.15em] font-light transition-colors cursor-pointer"
+              className={`year-tab-btn flex-1 py-1.5 text-xs uppercase tracking-[0.15em] font-light transition-colors cursor-pointer${isActive ? " active" : ""}`}
               style={{
                 background: isActive ? "var(--warm-accent)" : "transparent",
                 color: isActive ? "var(--background)" : "var(--warm-nav)",

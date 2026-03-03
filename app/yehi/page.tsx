@@ -90,7 +90,7 @@ export default function YehiPage({ searchParams }: Props) {
           className="mb-1 font-light tracking-wide"
           style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)" }}
         >
-          Paintings
+          Yehi
         </h1>
         <p className="text-sm" style={{ color: "var(--warm-text)" }}>
           {latestYear === earliestYear ? latestYear : `${earliestYear}–${latestYear}`}
