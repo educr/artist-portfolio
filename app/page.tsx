@@ -97,7 +97,7 @@ const WorkCard = ({ item }: { item: WorkItem }) => {
 };
 
 const WorkGrid = ({ works }: { works: WorkItem[] }) => (
-  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5">
+  <div className="grid grid-cols-1 gap-5">
     {works.map((item) => (
       <WorkCard key={item.url ?? item.slug ?? item.href} item={item} />
     ))}
@@ -212,7 +212,7 @@ export default function Home() {
   ].sort(compareWorks);
 
   return (
-    <main className="mx-auto max-w-5xl px-8 py-12">
+    <main className="mx-auto max-w-2xl px-8 py-12">
       <h1
         className="mb-1 font-light tracking-wide"
         style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)" }}
