@@ -16,6 +16,9 @@ export async function generateStaticParams() {
       (file) =>
         file.endsWith(".mdx") &&
         file !== "cv.mdx" &&
+        file !== "de-profundis.mdx" &&
+        file !== "de-profundis-video.mdx" &&
+        file !== "addendum.mdx" &&
         !yehiFilePattern.test(file) &&
         !legacyPaintingsFilePattern.test(file)
     )

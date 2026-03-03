@@ -3,7 +3,17 @@
 
 :root {
   --background: #f9f7f5;
-  --foreground: #121226 ;
+  --foreground: #1e0a36;
+  --warm-accent: #c8a880;
+  --warm-line: rgba(200, 168, 128, 0.55);
+  --warm-text: rgba(110, 70, 15, 0.82);
+  --warm-label: rgba(110, 70, 15, 0.65);
+  --warm-placeholder: #ece4d8;
+  --warm-placeholder-gradient: linear-gradient(135deg, #ddd5c5, #c4b8a8);
+  --warm-nav: #6b4e2e;
+  --warm-hover-bg: rgba(242, 232, 217, 0.6);
+  --warm-card-bg: rgba(242, 236, 226, 0.5);
+  --warm-border: rgba(200, 168, 128, 0.22);
 }
 
 @theme inline {
@@ -13,11 +23,13 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #121226;
-    --foreground: #f9f7f5;
-  }
+
+.warm-card {
+  transition: background-color 200ms;
+  border-radius: 0.75rem;
+}
+.warm-card:hover {
+  background-color: var(--warm-hover-bg);
 }
 
 body {

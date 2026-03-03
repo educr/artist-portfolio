@@ -50,12 +50,12 @@ const loadEntries = (): YehiEntry[] => {
 };
 
 type Props = {
-  searchParams?: Promise<{
+  searchParams?: {
     year?: string;
-  }>;
+  };
 };
 
-export default async function YehiPage({ searchParams }: Props) {
+export default function YehiPage({ searchParams }: Props) {
   const entries = loadEntries();
 
   if (!entries.length) {
@@ -76,8 +76,7 @@ export default async function YehiPage({ searchParams }: Props) {
   const latestYear = Math.max(...years);
   const earliestYear = Math.min(...years);
   const artist = entries.find((entry) => entry.artist)?.artist ?? "Eduardo Andrés Crespo";
-  const params = searchParams ? await searchParams : undefined;
-  const requestedYear = Number(params?.year);
+  const requestedYear = Number(searchParams?.year);
   const selectedEntry = Number.isFinite(requestedYear)
     ? entries.find((entry) => entry.year === requestedYear) ?? entries[0]
     : entries[0];
@@ -85,23 +84,26 @@ export default async function YehiPage({ searchParams }: Props) {
   const { content: selectedContent } = matter(rawSelected);
 
   return (
-    <main className="mx-auto max-w-3xl p-8">
-      <header className="space-y-1 pb-4">
-        <h1 className="text-3xl font-bold">Yehi</h1>
-        <div className="text-sm text-gray-500">{artist}</div>
-        <div className="text-sm text-gray-500">
-          {latestYear === earliestYear ? latestYear : `${latestYear}–${earliestYear}`}
-        </div>
-      </header>
+    <>
+      <div className="mx-auto max-w-2xl px-8 pt-12 pb-6">
+        <h1
+          className="mb-1 font-light tracking-wide"
+          style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)" }}
+        >
+          Paintings
+        </h1>
+        <p className="text-sm" style={{ color: "var(--warm-text)" }}>
+          {latestYear === earliestYear ? latestYear : `${earliestYear}–${latestYear}`}
+        </p>
+      </div>
 
       <YearTabs sections={sections} activeYear={selectedEntry.year} />
 
-      <section className="py-8" aria-labelledby={`heading-${selectedEntry.year}`}>
-        <h2 id={`heading-${selectedEntry.year}`} className="mb-4 text-2xl font-semibold">
-          {selectedEntry.year}
-        </h2>
-        <MDXRemote source={selectedContent} />
-      </section>
-    </main>
+      <main className="mx-auto max-w-2xl px-8 py-8">
+        <section aria-labelledby={`heading-${selectedEntry.year}`}>
+          <MDXRemote source={selectedContent} />
+        </section>
+      </main>
+    </>
   );
 }

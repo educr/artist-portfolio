@@ -26,12 +26,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <header className="border-b border-gray-200 backdrop-blur">
-          <nav className="mx-auto max-w-3xl flex items-center justify-between px-8 py-4">
-            <Link href="/" className="text-sm font-medium text-gray-700 hover:text-gray-900">
+        <header className="sticky top-0 z-30 backdrop-blur-sm" style={{ borderBottom: "1px solid rgba(200, 168, 128, 0.22)", background: "rgba(249, 247, 245, 0.85)" }}>
+          <nav className="mx-auto max-w-2xl flex items-center justify-between px-8 py-4">
+            <Link
+              href="/"
+              className="text-xs uppercase tracking-[0.2em] font-light transition-opacity duration-200 hover:opacity-60"
+              style={{ color: "var(--warm-nav)" }}
+            >
               Works
             </Link>
-            <Link href="/cv" className="text-sm font-medium text-gray-700 hover:text-gray-900">
+            <Link
+              href="/cv"
+              className="text-xs uppercase tracking-[0.2em] font-light transition-opacity duration-200 hover:opacity-60"
+              style={{ color: "var(--warm-nav)" }}
+            >
               CV
             </Link>
           </nav>

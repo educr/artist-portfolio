@@ -1,5 +1,6 @@
-import Link from "next/link";
-import type { CSSProperties } from "react";
+"use client";
+
+import { useRouter } from "next/navigation";
 
 type Section = {
   year: number;
@@ -12,45 +13,45 @@ type Props = {
 };
 
 export default function YearTabs({ sections, activeYear }: Props) {
-  if (!sections.length) {
-    return null;
-  }
+  const router = useRouter();
 
-  const navStyle: CSSProperties = {
-    background: "var(--background)",
-  };
+  if (!sections.length) return null;
 
   return (
-    <nav className="sticky top-0 z-20 border-b border-black/10 backdrop-blur" style={navStyle}>
-      <ul className="flex gap-2 overflow-x-auto px-2 py-3">
-        {sections.map((section) => {
+    <div
+      className="sticky z-20 py-2"
+      style={{
+        top: "49px",
+        background: "rgba(249, 247, 245, 0.92)",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
+        borderBottom: "1px solid rgba(200, 168, 128, 0.22)",
+      }}
+    >
+      <div className="mx-auto max-w-2xl px-8">
+      <div className="flex overflow-hidden rounded-lg" style={{ border: "1px solid var(--warm-border)" }}>
+        {sections.map((section, i) => {
           const isActive = activeYear === section.year;
           return (
-            <li key={section.year}>
-              <Link
-                href={{ pathname: "/yehi", query: { year: section.year } }}
-                prefetch={false}
-                aria-current={isActive ? "page" : undefined}
-                style={
-                  isActive
-                    ? {
-                        background: "var(--foreground)",
-                        color: "var(--background)",
-                      }
-                    : {
-                        color: "var(--foreground)",
-                      }
-                }
-                className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
-                  isActive ? "" : "hover:bg-black/5"
-                }`}
-              >
-                {section.label}
-              </Link>
-            </li>
+            <button
+              key={section.year}
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                router.replace(`/yehi?year=${section.year}`, { scroll: false });
+              }}
+              className="flex-1 py-1.5 text-xs uppercase tracking-[0.15em] font-light transition-colors cursor-pointer"
+              style={{
+                background: isActive ? "var(--warm-accent)" : "transparent",
+                color: isActive ? "var(--background)" : "var(--warm-nav)",
+                borderLeft: i > 0 ? "1px solid var(--warm-border)" : undefined,
+              }}
+            >
+              {section.label}
+            </button>
           );
         })}
-      </ul>
-    </nav>
+      </div>
+      </div>
+    </div>
   );
 }
