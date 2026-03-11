@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import Link from "next/link";
 import { AccordionSection } from "./AccordionSection";
+import { ThumbnailImage } from "./ThumbnailImage";
 
 type WorkItem = {
   slug?: string;
@@ -50,13 +51,7 @@ const WorkCard = ({ item }: { item: WorkItem }) => {
         style={{ aspectRatio: "3/2", background: "var(--warm-placeholder)" }}
       >
         {item.thumbnail ? (
-          <img
-            src={item.thumbnail}
-            alt={`${item.title} thumbnail`}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover"
-          />
+          <ThumbnailImage src={item.thumbnail} alt={`${item.title} thumbnail`} />
         ) : (
           <div
             className="h-full w-full"
