@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import YearTabs from "./YearTabs";
+import { YehiYearList, YehiPrevNext } from "./YehiPagination";
 
 type YehiEntry = {
   year: number;
@@ -67,19 +67,19 @@ export default function YehiPage({ searchParams }: Props) {
     );
   }
 
-  const sections = entries.map((entry) => ({
-    year: entry.year,
-    label: entry.year.toString(),
-  }));
-
   const years = entries.map((entry) => entry.year);
   const latestYear = Math.max(...years);
   const earliestYear = Math.min(...years);
-  const artist = entries.find((entry) => entry.artist)?.artist ?? "Eduardo Andrés Crespo";
   const requestedYear = Number(searchParams?.year);
-  const selectedEntry = Number.isFinite(requestedYear)
-    ? entries.find((entry) => entry.year === requestedYear) ?? entries[0]
-    : entries[0];
+  const selectedIndex = Number.isFinite(requestedYear)
+    ? entries.findIndex((entry) => entry.year === requestedYear)
+    : 0;
+  const activeIndex = selectedIndex === -1 ? 0 : selectedIndex;
+  const selectedEntry = entries[activeIndex];
+
+  const prevYear = activeIndex > 0 ? entries[activeIndex - 1].year : null;
+  const nextYear = activeIndex < entries.length - 1 ? entries[activeIndex + 1].year : null;
+
   const rawSelected = fs.readFileSync(selectedEntry.filePath, "utf8");
   const { content: selectedContent } = matter(rawSelected);
 
@@ -97,13 +97,15 @@ export default function YehiPage({ searchParams }: Props) {
         </p>
       </div>
 
-      <YearTabs sections={sections} activeYear={selectedEntry.year} />
+      <YehiYearList years={years} activeYear={selectedEntry.year} />
 
       <main className="mx-auto max-w-2xl px-8 py-8">
         <section aria-labelledby={`heading-${selectedEntry.year}`}>
           <MDXRemote source={selectedContent} />
         </section>
       </main>
+
+      <YehiPrevNext prevYear={prevYear} nextYear={nextYear} />
     </>
   );
 }
