@@ -2,28 +2,28 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { YehiYearList, YehiPrevNext } from "./YehiPagination";
+import { OilPaintingsYearList, OilPaintingsPrevNext } from "./OilPaintingsPagination";
 
-type YehiEntry = {
+type OilPaintingsEntry = {
   year: number;
   filePath: string;
   artist?: string;
 };
 
-const yehiPattern = /^yehi-(\d{4})\.mdx$/;
+const oilPaintingsPattern = /^oil-paintings-(\d{4})\.mdx$/;
 
-const loadEntries = (): YehiEntry[] => {
+const loadEntries = (): OilPaintingsEntry[] => {
   const contentDir = path.join(process.cwd(), "content");
   const files = fs
     .readdirSync(contentDir)
-    .filter((file) => yehiPattern.test(file));
+    .filter((file) => oilPaintingsPattern.test(file));
 
   const entries = files
     .map((file) => {
       const filePath = path.join(contentDir, file);
       const raw = fs.readFileSync(filePath, "utf8");
       const { data } = matter(raw);
-      const [, yearMatch] = yehiPattern.exec(file) ?? [];
+      const [, yearMatch] = oilPaintingsPattern.exec(file) ?? [];
       const frontmatterYear = typeof data.year === "number" ? data.year : Number(data.year);
       const year = Number.isFinite(frontmatterYear)
         ? frontmatterYear
@@ -35,7 +35,7 @@ const loadEntries = (): YehiEntry[] => {
         return null;
       }
 
-      const entry: YehiEntry = {
+      const entry: OilPaintingsEntry = {
         year,
         filePath,
         artist: typeof data.artist === "string" ? data.artist : undefined,
@@ -43,7 +43,7 @@ const loadEntries = (): YehiEntry[] => {
 
       return entry;
     })
-    .filter((entry): entry is YehiEntry => entry !== null);
+    .filter((entry): entry is OilPaintingsEntry => entry !== null);
 
   entries.sort((a, b) => b.year - a.year);
   return entries;
@@ -55,13 +55,13 @@ type Props = {
   };
 };
 
-export default function YehiPage({ searchParams }: Props) {
+export default function OilPaintingsPage({ searchParams }: Props) {
   const entries = loadEntries();
 
   if (!entries.length) {
     return (
       <main className="mx-auto max-w-3xl p-8">
-        <h1 className="text-3xl font-bold">Yehi</h1>
+        <h1 className="text-3xl font-bold">Oil Paintings</h1>
         <p className="mt-4 text-gray-500">Entries will appear here once they are published.</p>
       </main>
     );
@@ -90,14 +90,14 @@ export default function YehiPage({ searchParams }: Props) {
           className="mb-1 font-light tracking-wide"
           style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)" }}
         >
-          Yehi
+          Oil Paintings
         </h1>
         <p className="text-sm" style={{ color: "var(--warm-text)" }}>
           {latestYear === earliestYear ? latestYear : `${earliestYear}–${latestYear}`}
         </p>
       </div>
 
-      <YehiYearList years={years} activeYear={selectedEntry.year} />
+      <OilPaintingsYearList years={years} activeYear={selectedEntry.year} />
 
       <main className="mx-auto max-w-2xl px-8 py-8">
         <section aria-labelledby={`heading-${selectedEntry.year}`}>
@@ -105,7 +105,7 @@ export default function YehiPage({ searchParams }: Props) {
         </section>
       </main>
 
-      <YehiPrevNext prevYear={prevYear} nextYear={nextYear} />
+      <OilPaintingsPrevNext prevYear={prevYear} nextYear={nextYear} />
     </>
   );
 }

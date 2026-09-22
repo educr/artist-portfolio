@@ -147,26 +147,26 @@ export default function Home() {
     } satisfies WorkItem;
   });
 
-  const yehiPattern = /^yehi-\d{4}$/;
+  const oilPaintingsPattern = /^oil-paintings-\d{4}$/;
   const legacyPaintingsPattern = /^paintings-\d{4}$/;
-  const yehiEntries = rawWorks.filter(
-    (work) => work.slug && (yehiPattern.test(work.slug) || legacyPaintingsPattern.test(work.slug))
+  const oilPaintingsEntries = rawWorks.filter(
+    (work) => work.slug && (oilPaintingsPattern.test(work.slug) || legacyPaintingsPattern.test(work.slug))
   );
   const nonPaintingEntries = rawWorks.filter(
     (work) =>
-      !work.slug || (!yehiPattern.test(work.slug) && !legacyPaintingsPattern.test(work.slug))
+      !work.slug || (!oilPaintingsPattern.test(work.slug) && !legacyPaintingsPattern.test(work.slug))
   );
 
-  const yehiCards: WorkItem[] = yehiEntries.map((entry) => ({
-    url: `/yehi?year=${entry.year}`,
-    title: "Yehi",
+  const oilPaintingsCards: WorkItem[] = oilPaintingsEntries.map((entry) => ({
+    url: `/oil-paintings?year=${entry.year}`,
+    title: "Oil Paintings",
     year: entry.year,
     artist: entry.artist ?? "Eduardo Andrés Crespo",
     medium: entry.medium,
     thumbnail: entry.thumbnail,
   }));
 
-  const works: WorkItem[] = [...nonPaintingEntries, ...yehiCards];
+  const works: WorkItem[] = [...nonPaintingEntries, ...oilPaintingsCards];
 
   works.sort((a, b) => {
     const ya = a.year ?? 0;

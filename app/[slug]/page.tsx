@@ -4,8 +4,8 @@ import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { redirect } from "next/navigation";
 
-const yehiSlugPattern = /^yehi-\d{4}$/;
-const yehiFilePattern = /^yehi-\d{4}\.mdx$/;
+const oilPaintingsSlugPattern = /^oil-paintings-\d{4}$/;
+const oilPaintingsFilePattern = /^oil-paintings-\d{4}\.mdx$/;
 const legacyPaintingsSlugPattern = /^paintings-\d{4}$/;
 const legacyPaintingsFilePattern = /^paintings-\d{4}\.mdx$/;
 
@@ -19,7 +19,7 @@ export async function generateStaticParams() {
         file !== "de-profundis.mdx" &&
         file !== "de-profundis-video.mdx" &&
         file !== "addendum.mdx" &&
-        !yehiFilePattern.test(file) &&
+        !oilPaintingsFilePattern.test(file) &&
         !legacyPaintingsFilePattern.test(file)
     )
     .map((file) => ({
@@ -28,12 +28,12 @@ export async function generateStaticParams() {
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
-  if (yehiSlugPattern.test(params.slug)) {
-    redirect("/yehi");
+  if (oilPaintingsSlugPattern.test(params.slug)) {
+    redirect("/oil-paintings");
   }
 
   if (legacyPaintingsSlugPattern.test(params.slug)) {
-    redirect("/yehi");
+    redirect("/oil-paintings");
   }
 
   const filePath = path.join(process.cwd(), "content", `${params.slug}.mdx`);

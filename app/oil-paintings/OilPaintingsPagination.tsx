@@ -7,11 +7,11 @@ type AllYearsProps = {
   activeYear: number;
 };
 
-export function YehiYearList({ years, activeYear }: AllYearsProps) {
+export function OilPaintingsYearList({ years, activeYear }: AllYearsProps) {
   const router = useRouter();
 
   const navigate = (year: number) => {
-    router.replace(`/yehi?year=${year}`, { scroll: false });
+    router.replace(`/oil-paintings?year=${year}`, { scroll: false });
   };
 
   return (
@@ -53,12 +53,12 @@ type PrevNextProps = {
   nextYear: number | null;
 };
 
-export function YehiPrevNext({ prevYear, nextYear }: PrevNextProps) {
+export function OilPaintingsPrevNext({ prevYear, nextYear }: PrevNextProps) {
   const router = useRouter();
 
   const navigate = (year: number) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    router.replace(`/yehi?year=${year}`, { scroll: false });
+    router.replace(`/oil-paintings?year=${year}`, { scroll: false });
   };
 
   if (!prevYear && !nextYear) return null;
