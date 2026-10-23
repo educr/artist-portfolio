@@ -61,7 +61,7 @@ export default function OilPaintingsPage({ searchParams }: Props) {
   if (!entries.length) {
     return (
       <main className="mx-auto max-w-3xl p-8">
-        <h1 className="text-3xl font-bold">Oil Paintings</h1>
+        <h1 className="text-3xl font-bold">Paintings</h1>
         <p className="mt-4 text-gray-500">Entries will appear here once they are published.</p>
       </main>
     );
@@ -90,7 +90,7 @@ export default function OilPaintingsPage({ searchParams }: Props) {
           className="mb-1 font-light tracking-wide"
           style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)" }}
         >
-          Oil Paintings
+          Paintings
         </h1>
         <p className="text-sm" style={{ color: "var(--warm-text)" }}>
           {latestYear === earliestYear ? latestYear : `${earliestYear}–${latestYear}`}

@@ -159,7 +159,7 @@ export default function Home() {
 
   const oilPaintingsCards: WorkItem[] = oilPaintingsEntries.map((entry) => ({
     url: `/oil-paintings?year=${entry.year}`,
-    title: "Oil Paintings",
+    title: "Paintings",
     year: entry.year,
     artist: entry.artist ?? "Eduardo Andrés Crespo",
     medium: entry.medium,
